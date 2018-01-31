@@ -1,11 +1,6 @@
-# from time import time
-# from PIL import Image
-# import numpy as np
-
-
-
+#
+#
 import numpy as np
-from sklearn.datasets import load_sample_image
 from sklearn.utils import shuffle
 from sklearn.cluster import KMeans
 from sklearn.metrics import pairwise_distances_argmin
@@ -13,7 +8,7 @@ from time import time
 from PIL import Image
 
 import matplotlib.pyplot as plt
-n_colors=64
+n_colors=20
 
 
 oran = Image.open("k4.jpg")
@@ -62,7 +57,7 @@ plt.figure(1)
 plt.clf()
 ax = plt.axes([0, 0, 1, 1])
 plt.axis('off')
-plt.title('Original image (96,615 colors)')
+plt.title('Original image (196,615 colors)')
 plt.imshow(oran)
 
 plt.figure(2)
@@ -81,45 +76,37 @@ plt.imshow(recreate_image(codebook_random, labels_random, w, h))
 plt.show()
 
 
-#TODO HERE IS THE WORST ALGORITHM TO GET THE NUMBER OF COLORS IN IMAGE !!! I STILL WAITING MOR THAN  100SECONDS WITH 3.5GHZ WITHOUT ANY RESULT
+#TODO perform the algorithm which calculate the number of colors
 
 
-image = Image.open("oran.jpg")
-def buildArrray(image):
-    image = np.asarray(image)
-    array=[]
-    nbc = len(image[0])
-    nbl = len(image)
-    i = 0
-    j = 0
-    while i < nbl:
-        j=0
-        while j < nbc:
-            array.append(image[i][j])
-            j = j + 1
-        i = i + 1
-    return array
-
+image = Image.open("k4.jpg")
 def insertIfNotExist(colors, element):
 
-    i=0
-    while i< len(colors):
-        if (colors[i] == element).all():
+
+    for i in colors:
+        if (i == element).all():
             return colors
-        i=i+1
+
     colors.append(element)
     return colors
 
 
-def NumberOfColors(image):
-    image=buildArrray(image)
-    colors=[]
+def numberOfColors(image):
+    image = np.asarray(image)
+    array = []
 
-    i=0
-    while i<len(image):
-        colors = insertIfNotExist(colors, image[i])
-        i=i+1
-    return len(colors)
+    print "Number of Pixels : ",len(image)*len(image[0])
 
-#print NumberOfColors(image)
+    for lin in image:
+
+        print len(array)
+        t0 = time()
+
+        for col in lin:
+            array=insertIfNotExist(array,col)
+        print("done in %0.3fs." % (time() - t0))
+
+    return len(array)
+
+print "Number of colors is : ",numberOfColors(image)
 
