@@ -1,13 +1,34 @@
 #
-#
 import numpy as np
 from sklearn.utils import shuffle
 from sklearn.cluster import KMeans
 from sklearn.metrics import pairwise_distances_argmin
 from time import time
 from PIL import Image
-
 import matplotlib.pyplot as plt
+
+
+def array1DFrom2D(a):
+    b=[]
+    for i in a:
+        for j in i:
+            b.append(j)
+
+    return b
+
+def numberPixels(image):
+    image = np.asarray(image)
+    return len(image)*len(image[0])
+
+def numberDistinctColor(image):
+    image = np.asarray(image)
+    image = array1DFrom2D(image)
+    return len(np.unique(image,axis=0))
+
+
+
+
+
 n_colors=20
 
 
@@ -57,56 +78,28 @@ plt.figure(1)
 plt.clf()
 ax = plt.axes([0, 0, 1, 1])
 plt.axis('off')
-plt.title('Original image (196,615 colors)')
+title='Original image ( '+str(numberDistinctColor(oran))+' colors)'
+plt.title(title)
 plt.imshow(oran)
 
 plt.figure(2)
 plt.clf()
 ax = plt.axes([0, 0, 1, 1])
 plt.axis('off')
-plt.title('Quantized image (64 colors, K-Means)')
+plt.title('Quantized image ('+str(n_colors)+' colors, K-Means)')
 plt.imshow(recreate_image(kmeans.cluster_centers_, labels, w, h))
 
 plt.figure(3)
 plt.clf()
 ax = plt.axes([0, 0, 1, 1])
 plt.axis('off')
-plt.title('Quantized image (64 colors, Random)')
+title='Quantized image ('+str(n_colors)+' colors, Random)'
+plt.title(title)
 plt.imshow(recreate_image(codebook_random, labels_random, w, h))
 plt.show()
 
 
 #TODO perform the algorithm which calculate the number of colors
 
-
-image = Image.open("k4.jpg")
-def insertIfNotExist(colors, element):
-
-
-    for i in colors:
-        if (i == element).all():
-            return colors
-
-    colors.append(element)
-    return colors
-
-
-def numberOfColors(image):
-    image = np.asarray(image)
-    array = []
-
-    print "Number of Pixels : ",len(image)*len(image[0])
-
-    for lin in image:
-
-        print len(array)
-        t0 = time()
-
-        for col in lin:
-            array=insertIfNotExist(array,col)
-        print("done in %0.3fs." % (time() - t0))
-
-    return len(array)
-
-print "Number of colors is : ",numberOfColors(image)
+#DONE with numpay functions
 
